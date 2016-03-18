@@ -1,9 +1,9 @@
 #!/bin/bash
-VERSION="unstable"
+VERSION="3.0.7"
 
 # install build tools
 sudo apt-get update
-sudo apt-get install -y build-essential git
+sudo apt-get -q -y -o DPkg::Options::=--force-confold -o DPkg::Options::=--force-confdef install build-essential git postfix mailutils
 
 # update hosts
 cat /vagrant/redis-hosts.txt | sudo tee -a /etc/hosts
@@ -31,6 +31,11 @@ sudo service redis start
 # configure redis sentinel
 sudo cp /vagrant/redis-sentinel.upstart.conf /etc/init/redis-sentinel.conf
 sudo cp /vagrant/redis-sentinel.conf /etc/redis-sentinel.conf
+sudo mkdir -p /var/redis
+sudo cp /vagrant/redis-notify.sh /var/redis/
+sudo chmod +x /var/redis/redis-notify.sh
+sudo cp /vagrant/reconfig.sh /var/redis/
+sudo chmod +x /var/redis/reconfig.sh
 sudo service redis-sentinel start
 
 # Configure redis clusters

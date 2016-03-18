@@ -13,7 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   HOSTS.each do |r|
     config.vm.define r[0] do |v|
       v.vm.provision 'shell', path: "provision.sh"
-      v.vm.box = "ubuntu/trusty32"
+      v.vm.box = "ubuntu/trusty64"
       v.vm.provider "virtualbox" do |vbox|
         vbox.memory = 256
         vbox.cpus = 1
@@ -21,5 +21,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       v.vm.network :private_network, ip: r[1]
       v.vm.hostname = r[0]
     end
+  end
+  # Package cache
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.scope = :box
   end
 end
